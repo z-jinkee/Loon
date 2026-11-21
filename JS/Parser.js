@@ -1,3 +1,4 @@
+
 var mode = $resourceType;
 
 var keep = "";
@@ -5,6 +6,7 @@ var drop = "";
 var wipe = "";
 var name = "";
 var sort = "";
+var flag = false;
 var ua   = false;
 var note = false;
 
@@ -19,6 +21,7 @@ function param() {
     sort = args.sort != null ? String(args.sort) : sort;
     note = args.note === true || args.note === "true";
     ua   = args.ua === true || args.ua === "true";
+    flag = args.flag === true || args.flag === "true";
 }
 
 // 替换UA请求
@@ -172,6 +175,10 @@ function rename(entries) {
         }
     }
 
+    function removeFlags(t) {
+        return t.replace(/(?:\uD83C[\uDDE6-\uDDFF]){2}/g, "");
+    }
+
     function editTitle(rawTitle) {
         var t = String(rawTitle || "").trim();
         if (!t) return "";
@@ -183,6 +190,9 @@ function rename(entries) {
                 t = t.split(rules[i][0]).join(rules[i][1]);
             }
         }
+
+        if (flag) t = removeFlags(t);
+
         return t.replace(/\s{2,}/g, " ").trim();
     }
 
